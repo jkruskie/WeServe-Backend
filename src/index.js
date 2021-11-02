@@ -4,8 +4,11 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const db = require('./db');
-const routes = require('./routes');
 const mongoose = require('mongoose');
+
+const eventRoutes = require('./routes/events');
+const userRoutes = require('./routes/users');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -24,10 +27,10 @@ app.use(cors());
 // Add Morgan to log HTTP requests
 app.use(morgan('combined'));
 
-// Defining endpoints to return all ads
-app.get('/', (req, res) => {
-    res.send(ads)
-});
+// Defining endpoints to return landing
+// app.get('/', (req, res) => {
+//     res.send(ads)
+// });
 
 // Start the server
 mongoose
@@ -36,8 +39,11 @@ mongoose
 		const app = express()
         // Read JSONs
         app.use(express.json());
-        // API Routes
-		app.use("/api", routes)
+
+        // Initialize routes
+		app.use("/api/users", userRoutes);
+        app.use("/api/events", eventRoutes);
+        app.use("/api/auth", authRoutes);
 
 		app.listen(process.env.PORT, () => {
             console.log('Listening on http://localhost:' + process.env.PORT);
