@@ -63,6 +63,17 @@ router.patch("/events/:id", async (req, res) => {
 	}
 })
 
+// Delete Event
+router.delete("/events/:id", async (req, res) => {
+	try {
+		await Event.deleteOne({ _id: req.params.id })
+		res.status(204).send()
+	} catch {
+		res.status(404)
+		res.send({ error: "Event doesn't exist!" })
+	}
+})
+
 // End Events
 
 
