@@ -1,67 +1,64 @@
 const Event = require('../models/Event');
 const express = require('express');
 
-exports.getSpecific = (req, res) => {
-    try {
-        const event = Event.findOne({_id: req.params.id });
-        res.send(event);
-    } catch {
-        res.status(404);
-        res.send({error: "Event doesn't exist"});
-    }
-};
+const eventController = {
+	all (req, res) {
+        Event.find({})
+            .exec((err, events) => res.json(events));
+	},
 
-exports.getAll = (req, res) => {
-    const events = Event.find();
-    res.send(events);
-};
+	byId (req, res) {
+		const idEvent = req.params.id;
+        Event.find({ _id: idEvent })
+            .exec((err, events) => res.json(events));
+	},
 
-exports.createNew = (req, res) => {
-    const event = new Event({
-        title: req.body.title,
-        description: req.body.description,
-        details: req.body.details,
-        when: req.body.when,
-    });
- event.save();
-    res.send(event);
-};
+	create (req, res) {
+		const idEvent = req.params.id;
+		let event = req.body;
+		const newEvent = new Event(event);
 
-exports.updateSpecific = (req, res) => {
-    try {
-		const event = Event.findOne({ _id: req.params.id })
+		newEvent.save( (err, saved) => {
+			res.json(saved);
+		});
+	},
 
-		if (req.body.title) {
-			event.title = req.body.title
+	update (req, res) {
+		try {
+			const idEvent = req.params.id;
+			let event = req.body;
+
+			Event.findOne({ _id: idEvent }, (err, data) => {
+				if(event.title) {
+					data.title = event.title;
+				}
+				if(event.description) {
+					data.description = event.description;
+				}
+				if(event.details) {
+					data.details = event.details;
+				}
+				if(event.when) {
+					data.when = event.when;
+				}
+                if(data) {
+                    data.save((err, updated) => res.json(updated));
+                } else {
+                    res.status(418);
+                    res.send({ error: "I'm a teapot" });
+                }
+			});
+		} catch {
+			res.status(404);
+			res.send({ error: "Event doesn't exist!" });
 		}
+	},
 
-		if (req.body.description) {
-			event.description = req.body.description
-		}
+	delete (req, res) {
+		const idEvent = req.params.id;
 
-        if (req.body.details) {
-			event.details = req.body.details
-		}
-
-
-        if (req.body.when) {
-			event.when = req.body.when
-		}
-
-	 event.save()
-		res.send(event)
-	} catch {
-		res.status(404)
-		res.send({ error: "Event doesn't exist!" })
+        Event.findOne({_id: idEvent}).deleteOne( (err, removed) => res.status(204).send() )
 	}
 };
 
-exports.deleteSpecific = (req, res) => {
-    try {
-	 Event.deleteOne({ _id: req.params.id })
-		res.status(204).send()
-	} catch {
-		res.status(404)
-		res.send({ error: "Event doesn't exist!" })
-	}
-};
+module.exports = eventController;
