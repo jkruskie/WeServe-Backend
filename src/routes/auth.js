@@ -40,6 +40,35 @@ router.post("/signin", async (req, res) => {
     }
 });
 
+router.post("/signup", async (req, res) => {
+    const user = await User.findOne({email: req.body.email });
+
+    if (!user) {
+ 
+        let user = req.body;
+		const newUser = new User(user);
+        newUser.password = bcrypt.hashSync(user.password);
+
+		newUser.save( (err, saved) => {
+            var token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, {
+                expiresIn: 2592000  // 30 days
+                });
+    
+            res.status(200).send({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            year: user.year,
+            major: user.major,
+            accessToken: token
+            });
+		});
+
+    } else {
+        // User exists already
+        return res.status(403).send({ message: "User Exists Already." });
+    }
+});
 
 // End Auth
 

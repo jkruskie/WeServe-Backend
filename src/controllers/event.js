@@ -14,7 +14,6 @@ const eventController = {
 	},
 
 	create (req, res) {
-		const idEvent = req.params.id;
 		let event = req.body;
 		const newEvent = new Event(event);
 
