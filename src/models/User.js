@@ -3,18 +3,19 @@ const mongoose = require('mongoose');
 
 const schema = mongoose.Schema({
     name: String, 
-    email: String,
+    email: {
+      type: String,
+      unique: true,
+      required: 'Your email is required',
+    },
     password: String,
     year: String, 
     major: String,
-    // roles: [
-    //     {
-    //       type: mongoose.Schema.Types.ObjectId,
-    //       ref: "Role"
-    //     }
-    //   ],
-      is_active: Boolean,
-}, { timestamps: {}});
+    is_active: Boolean,
+  }, { 
+  timestamps: {}
+  }
+);
 
 // schema.pre('save', function(next) {
 //     now = new Date();
