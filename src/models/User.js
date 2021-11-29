@@ -4,10 +4,7 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema({
     name: String, 
     email: String,
-    password: {
-      type: String,
-      select: false
-    },
+    password: String,
     year: String, 
     major: String,
     // roles: [

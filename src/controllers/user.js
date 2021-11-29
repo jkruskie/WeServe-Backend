@@ -3,13 +3,13 @@ const express = require('express');
 
 const userController = {
 	all (req, res) {
-        User.find({})
+        User.find({}).exclude('password')
             .exec((err, users) => res.json(users));
 	},
 
 	byId (req, res) {
 		const idUser = req.params.id;
-        User.find({ _id: idUser })
+        User.find({ _id: idUser }).exclude('password')
             .exec((err, users) => res.json(users));
 	},
 
