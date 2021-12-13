@@ -44,6 +44,9 @@ const userController = {
                 if(user.major) {
                     data.major = user.major;
                 }
+				if(user.user_role) {
+					data.user_role = user.user_role;
+				}
                 if(data) {
                     data.save((err, updated) => res.json(updated));
                 } else {
@@ -60,7 +63,7 @@ const userController = {
 	delete (req, res) {
 		const idUser = req.params.id;
 
-        Event.findOne({_id: idUser}).deleteOne( (err, removed) => res.status(204).send() )
+        User.findOne({_id: idUser}).deleteOne( (err, removed) => res.status(204).send() )
 	}
 };
 

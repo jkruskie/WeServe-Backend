@@ -4,13 +4,25 @@ const express = require('express');
 const eventController = {
 	all (req, res) {
         Event.find({})
-            .exec((err, events) => res.json(events));
+            .exec((err, events) => {
+				if(err) {
+					res.json(err);
+				} else {
+					res.json(events);
+				}
+			});
 	},
 
 	byId (req, res) {
 		const idEvent = req.params.id;
         Event.find({ _id: idEvent })
-            .exec((err, events) => res.json(events));
+            .exec((err, events) => {
+				if(err) {
+					res.json(err);
+				} else {
+					res.json(events);
+				}
+			});
 	},
 
 	create (req, res) {
@@ -18,7 +30,11 @@ const eventController = {
 		const newEvent = new Event(event);
 
 		newEvent.save( (err, saved) => {
-			res.json(saved);
+			if(err) {
+				res.json(err);
+			} else {
+				res.json(saved);
+			}
 		});
 	},
 
@@ -28,24 +44,44 @@ const eventController = {
 			let event = req.body;
 
 			Event.findOne({ _id: idEvent }, (err, data) => {
-				if(event.title) {
-					data.title = event.title;
+				
+				if(err) {
+					res.json(err);
+				} else {
+					if(event.organization) {
+						data.organization = event.organization;
+					}
+					if(event.user) {
+						data.user = event.user;
+					}
+					if(event.title) {
+						data.title = event.title;
+					}
+					if(event.description) {
+						data.description = event.description;
+					}
+					if(event.details) {
+						data.details = event.details;
+					}
+					if(event.location) {
+						data.location = event.location;
+					}
+					if(event.start_date) {
+						data.start_date = event.start_date;
+					}
+					if(event.end_date) {
+						data.end_date = event.end_date;
+					}
+					if(event.image) {
+						data.image = event.image;
+					}
+					if(data) {
+						data.save((err, updated) => res.json(updated));
+					} else {
+						res.status(418);
+						res.send({ error: "I'm a teapot" });
+					}
 				}
-				if(event.description) {
-					data.description = event.description;
-				}
-				if(event.details) {
-					data.details = event.details;
-				}
-				if(event.when) {
-					data.when = event.when;
-				}
-                if(data) {
-                    data.save((err, updated) => res.json(updated));
-                } else {
-                    res.status(418);
-                    res.send({ error: "I'm a teapot" });
-                }
 			});
 		} catch {
 			res.status(404);
