@@ -6,11 +6,35 @@ const schema = mongoose.Schema({
     email: {
       type: String,
       unique: true,
+      lowercase: true,
       required: 'Your email is required',
     },
-    password: String,
+    password: {
+      type: String,
+      select: false,
+    },
     year: String, 
     major: String,
+    university: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+    organiztion: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+    user_type: {
+      type: String,
+      enum: [
+        'student', 'organization', 'university',
+      ],
+      required: true,
+    },
+    user_role: {
+      type: String,
+      enum: [
+        'user', 'moderator', 'administrator', 'app-admin'
+      ],
+      required: true,
+    },
     is_active: Boolean,
   }, { 
   timestamps: {}
