@@ -11,7 +11,7 @@ const eventRoutes = require('./routes/events');
 const userRoutes = require('./routes/users');
 const organizationRoutes = require('./routes/organization');
 const authRoutes = require('./routes/auth');
-const chatRoomRoutes = require('./routes/chatRoom');
+// const chatRoomRoutes = require('./routes/chatRoom');
 
 const app = express();
 const http = require('http').Server(app);
@@ -54,7 +54,7 @@ mongoose
 		app.use("/api/organizations", organizationRoutes);
         app.use("/api/events", eventRoutes);
         app.use("/api/auth", authRoutes);
-        app.use("/room", chatRoomRoutes);
+        // app.use("/room", chatRoomRoutes);
 
         /** Create socket connection */
         const socket = io(http);
